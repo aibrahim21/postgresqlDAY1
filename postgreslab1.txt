@@ -1,0 +1,206 @@
+
+# enableing postgres inside terminal 
+[sudo] password for amira: 
+postgres@Amira:~$ psql
+psql (16.8 (Ubuntu 16.8-0ubuntu0.24.04.1))
+Type "help" for help.
+
+postgres=# createdb -h localhost -p 5432 -U postgres testdb
+postgres-# \l
+
+===================
+
+postgres@Amira:~$ psql -U postgres
+psql (16.8 (Ubuntu 16.8-0ubuntu0.24.04.1))
+====================
+testdb=# CREATE TABLE student (
+    stuid SERIAL PRIMARY KEY,   -- SERIAL is an auto-incrementing integer type
+    email VARCHAR(255),         -- Email column, VARCHAR with a max length of 255
+    address VARCHAR(255),       -- Address column, VARCHAR with a max length of 255
+    trackid INTEGER             -- Track ID column, INTEGER type
+);
+
+
+
+CREATE TABLE
+testdb=# \d
+                List of relations
+ Schema |       Name        |   Type   |  Owner   
+--------+-------------------+----------+----------
+ public | student           | table    | postgres
+ public | student_stuid_seq | sequence | postgres
+
+======================
+# 1 ,2 
+CREATE TABLE track (
+testdb(# trackid INTEGER,
+testdb(# trackname VARCHAR(255)
+testdb(# );
+CREATE TABLE
+testdb=# CREATE TABLE subject (
+testdb(# subjectid INTEGER 
+testdb(# , sub_name VARCHAR(255),
+testdb(# max_score INTEGER);
+CREATE TABLE
+testdb=# CREATE TABLE exam (
+testdb(# examid INTEGER,
+testdb(# date DATE);
+testdb=# ALTER TABLE student ADD CONSTRAINT FOREIGN KEY (trackid) REFERENCES track (trackid);
+testdb=# ALTER TABLE subject 
+testdb-# ADD CONSTRAINT 
+testdb-# sudjectid_primary
+testdb-# PRIMARY KEY 
+testdb-# (subjectid)
+testdb-# ;
+ALTER TABLE
+testdb=# ALTER TABLE exam 
+testdb-# ADD CONSTRAINT
+testdb-# examid_primary
+testdb-# PRIMARY KEY 
+testdb-# (examid)
+testdb-# ;
+        ^
+testdb=# CREATE TABLE grades (
+testdb(# stu_id INTEGER REFERENCES student (stuid),
+testdb(# sub_id INTEGER REFERENCES subject (subjectid),
+testdb(# exam_id INTEGER REFERENCES exam (examid),
+testdb(# grade INTEGER )
+testdb-# ;
+CREATE TABLE
+testdb=# INSERT INTO subject VALUES
+testdb-# (1 , 'problem solving' , 100),
+testdb-# (2 , 'Clean code' , 70),
+testdb-# (3 , 'Algorithms' , 90);
+INSERT 0 3
+testdb=# INSERT INTO exam VALUES
+testdb-# (101 , '2025-5-5'),
+testdb-# (102 , '2025-5-4'),
+testdb-# (103 , '2025-5-6');
+INSERT 0 3
+====================
+#3
+testdb=# SELECT * FROM student;
+ stuid |     email      | address | trackid | e_name | birthdate  
+-------+----------------+---------+---------+--------+------------
+     1 | amira@nice.com | Abnub   |       1 | Amira  | 2002-08-15
+     2 | lola@nice.com  | assuit  |       2 | lola   | 2004-03-05
+     3 | lily@nice.com  | cairo   |       3 | lily   | 1999-11-01
+(3 rows)
+=====================
+#4
+testdb=# CREATE TYPE gender_enum AS ENUM('female' , 'male');
+CREATE TYPE
+
+testdb=# ALTER TABLE student 
+testdb-# ADD COLUMN gender gender_enum;
+ALTER TABLE
+testdb=# UPDATE student SET gender ='female' WHERE stuid = 1;
+UPDATE 1
+testdb=# UPDATE student SET gender ='female' WHERE stuid = 2;
+UPDATE 1
+testdb=# UPDATE student SET gender ='female' WHERE stuid = 3;
+UPDATE 1
+
+
+
+#6
+testdb=# SELECT * FROM student
+WHERE gender = 'female' AND birthdate > '1999-01-01';
+ stuid |     email      | address | trackid | e_name | birthdate  | gender 
+-------+----------------+---------+---------+--------+------------+--------
+     1 | amira@nice.com | Abnub   |       1 | Amira  | 2002-08-15 | female
+     2 | lola@nice.com  | assuit  |       2 | lola   | 2004-03-05 | female
+     3 | lily@nice.com  | cairo   |       3 | lily   | 1999-11-01 | female
+(3 rows)
+#7
+testdb=# SELECT * FROM student WHERE e_name LIKE 'A%';
+ stuid |     email      | address | trackid | e_name | birthdate  | gender 
+-------+----------------+---------+---------+--------+------------+--------
+     1 | amira@nice.com | Abnub   |       1 | Amira  | 2002-08-15 | female
+
+
+=============================================
+
+#8 
+
+testdb=# SELECT * FROM subject;
+ subjectid |    sub_name     | max_score 
+-----------+-----------------+-----------
+         1 | problem solving |       100
+         2 | Clean code      |        70
+         3 | Algorithms      |        90
+(3 rows)
+
+===============================
+
+#9 
+testdb=# SELECT * FROM  subject ORDER BY  max_score DESC
+testdb-# LIMIT 1;
+ subjectid |    sub_name     | max_score 
+-----------+-----------------+-----------
+         1 | problem solving |       100
+(1 row)
+
+__________________________________________________________________________
+Lab 2 
+
+#1 
+                                                             ^
+testdb=# SELECT COUNT(*) 
+testdb-# FROM student 
+testdb-# WHERE e_name = 'Mohammed';
+ count 
+-------
+     1
+(1 row)
+===================================
+#2 
+testdb=# SELECT COUNT(*), gender FROM student GROUP BY gender
+testdb-# ;
+ count | gender 
+-------+--------
+     3 | female
+     1 | male
+(2 rows)
+
+testdb=# 
+======================================
+#3 
+
+testdb=# SELECT COUNT(*), e_name FROM student GROUP BY e_name HAVING COUNT(*) > 2;
+ count |  e_name  
+-------+----------
+     3 | Mohammed
+(1 row)
+
+testdb=# 
+
+=========================================
+
+#4 
+testdb=# SELECT e_name , (SELECT trackname FROM track WHERE track.trackid = student.trackid) AS track_Name  FROM student;
+  e_name  | track_name 
+----------+------------
+ Amira    | Python
+ lola     | AI
+ lily     | Testing
+ Mohammed | Python
+ Mohammed | Python
+ Mohammed | Python
+(6 rows)
+
+=============================================
+#5
+
+testdb=# SELECT * FROM student
+WHERE trackid != (SELECT trackid FROM track WHERE trackname = 'OS');
+ stuid |        email         | address | trackid |  e_name  | birthdate  | gender 
+-------+----------------------+---------+---------+----------+------------+--------
+     1 | amira@nice.com       | Abnub   |       1 | Amira    | 2002-08-15 | female
+     2 | lola@nice.com        | assuit  |       2 | lola     | 2004-03-05 | female
+     3 | lily@nice.com        | cairo   |       3 | lily     | 1999-11-01 | female
+     4 | mohammed@student.com | london  |       1 | Mohammed | 1990-03-25 | male
+     5 | mohammed@student.com | london  |       1 | Mohammed | 1990-03-25 | male
+     6 | mohammed@student.com | london  |       1 | Mohammed | 1990-03-25 | male
+(6 rows)
+
