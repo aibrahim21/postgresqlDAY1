@@ -1,7 +1,9 @@
 # postgresql using Ubuntu Terminal DAY1
 
 Lab #1 , #2 summery
-##Generating a sequence of commands essentially sets up a database schema for a school or academic system, with students, subjects, exams, grades, tracks, and their relationships. The user also performs various operations like adding, querying, and modifying data, while encountering and fixing syntax and logical errors along the way.
+
+
+#Generating a sequence of commands essentially sets up a database schema for a school or academic system, with students, subjects, exams, grades, tracks, and their relationships. The user also performs various operations like adding, querying, and modifying data, while encountering and fixing syntax and logical errors along the way.
 
 Key Operations:
 Creating Tables: The creation of multiple tables to organize data for students, subjects, exams, grades, tracks, and their relationships.
